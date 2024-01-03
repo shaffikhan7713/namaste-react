@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import RestoCard from "./RestoCard";
+import RestoCard, { withPromotedRestoCard } from "./RestoCard";
 import Shimmer from "./Shimmer";
 import useOnlineStatus from "../utils/useOnlineStatus";
 
@@ -9,6 +9,8 @@ const Body = () => {
   const [filterData, setFilterData] = useState([]);
   const [searchText, setSearchText] = useState("");
   const isOnline = useOnlineStatus();
+
+  const PromotedRestoCard = withPromotedRestoCard(RestoCard);
 
   useEffect(() => {
     fetchData();
@@ -93,7 +95,11 @@ const Body = () => {
             key={restaurant.info.id}
             to={"restaurant/" + restaurant.info.id}
           >
-            <RestoCard resObject={restaurant} />
+            {restaurant.info.isOpen ? (
+              <PromotedRestoCard resObject={restaurant} />
+            ) : (
+              <RestoCard resObject={restaurant} />
+            )}
           </Link>
         ))}
       </div>

@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import useRestaurantMenu from "../utils/useRestaurantMenu";
+import RestaurantCategory from "./RestaurantCategory";
 
 const Restaurant = () => {
+  const [showIndex, setShowIndex] = useState(null);
   const { resId } = useParams();
   resData = useRestaurantMenu(resId);
 
@@ -13,17 +16,35 @@ const Restaurant = () => {
   const { itemCards } =
     resData?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card;
 
+  const itemCategories =
+    resData?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
+      (c) =>
+        c.card?.card?.["@type"] ===
+        "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+    );
+
+  // console.log(itemCategories);
   return (
-    <div>
-      <h1>{name}</h1>
-      <h3>{cuisines.join(", ")}</h3>
-      <ul>
+    <div className="text-center p-2 m-2">
+      <div className="font-bold">{name}</div>
+      <div className="font-normal">{cuisines.join(", ")}</div>
+      {/* <ul>
         {itemCards.map((item) => (
           <li key={item.card.info.id}>
             {item.card.info.name} - Rs. {item.card.info.price / 100}
           </li>
         ))}
-      </ul>
+      </ul> */}
+      <div>
+        {itemCategories.map((item, index) => (
+          <RestaurantCategory
+            key={item.card.card.title}
+            data={item.card.card}
+            showItems={index === showIndex ? true : false}
+            setShowIndex={() => setShowIndex(index)}
+          />
+        ))}
+      </div>
     </div>
   );
 };

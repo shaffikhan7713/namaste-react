@@ -16,4 +16,17 @@ const RestoCard = (resObject) => {
   );
 };
 
+export const withPromotedRestoCard = (RestoCard) => {
+  return (props) => {
+    return (
+      <div>
+        <label className="absolute p-3 m-3 bg-black text-white rounded-lg">
+          Promoted
+        </label>
+        <RestoCard {...props} />
+      </div>
+    );
+  };
+};
+
 export default RestoCard;
