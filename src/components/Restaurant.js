@@ -1,24 +1,9 @@
-import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import useRestaurantMenu from "../utils/useRestaurantMenu";
 
 const Restaurant = () => {
-  const [resData, setResData] = useState(null);
   const { resId } = useParams();
-
-  useEffect(() => {
-    fetchRestaurantData();
-  }, []);
-
-  const fetchRestaurantData = async () => {
-    const data = await fetch(
-      "https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=19.0759837&lng=72.8776559&restaurantId=" +
-        resId
-    );
-
-    const jsonData = await data.json();
-
-    setResData(jsonData.data);
-  };
+  resData = useRestaurantMenu(resId);
 
   if (resData === null) {
     return <h1>Loading Data...</h1>;
@@ -34,7 +19,7 @@ const Restaurant = () => {
       <h3>{cuisines.join(", ")}</h3>
       <ul>
         {itemCards.map((item) => (
-          <li>
+          <li key={item.card.info.id}>
             {item.card.info.name} - Rs. {item.card.info.price / 100}
           </li>
         ))}
