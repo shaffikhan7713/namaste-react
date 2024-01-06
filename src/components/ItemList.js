@@ -1,6 +1,14 @@
+import { useDispatch } from "react-redux";
 import { CARD_IMAGE_URL } from "../utils/constants";
+import { addItem } from "../utils/cardSlice";
 
 const ItemList = ({ items }) => {
+  const dispatch = useDispatch();
+
+  const handleClick = (item) => {
+    dispatch(addItem(item));
+  };
+
   return (
     <div className="text-left p-2 m-2">
       {items.map((item) => (
@@ -19,8 +27,14 @@ const ItemList = ({ items }) => {
             <span className="text-sm">{item.card.info.description}</span>
           </div>
           <div className="w-2/12">
+            <button
+              className="absolute bg-black text-white p-1 m-1 rounded"
+              onClick={() => handleClick(item)}
+            >
+              add+
+            </button>
             <img
-              className="w-20 h-auto"
+              className="w-40 h-auto"
               src={CARD_IMAGE_URL + item.card.info.imageId}
             />
           </div>

@@ -3,7 +3,7 @@ const RestoCard = (resObject) => {
   const { name, cuisines, avgRating, cloudinaryImageId } =
     resObject.resObject.info;
   return (
-    <div className="p-3 m-3 bg-gray-200 w-48 rounded-sm">
+    <div data-testid="resCard" className="p-3 m-3 bg-gray-200 w-48 rounded-sm">
       <img
         className="h-40 rounded-sm"
         alt="card image"
@@ -19,7 +19,7 @@ const RestoCard = (resObject) => {
 export const withPromotedRestoCard = (RestoCard) => {
   return (props) => {
     return (
-      <div>
+      <div data-testid="resCard">
         <label className="absolute p-3 m-3 bg-black text-white rounded-lg">
           Promoted
         </label>

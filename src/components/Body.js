@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import RestoCard, { withPromotedRestoCard } from "./RestoCard";
 import Shimmer from "./Shimmer";
 import useOnlineStatus from "../utils/useOnlineStatus";
+import UserContext from "../utils/UserContext";
 
 const Body = () => {
   const [resStateData, setResStateData] = useState([]);
   const [filterData, setFilterData] = useState([]);
   const [searchText, setSearchText] = useState("");
   const isOnline = useOnlineStatus();
+  const { loggedInUser, setUsername } = useContext(UserContext);
 
   const PromotedRestoCard = withPromotedRestoCard(RestoCard);
 
@@ -18,13 +20,13 @@ const Body = () => {
 
   /** Example of lifecycle methods in useEffect */
   useEffect(() => {
-    console.log("Inside UseEffect"); //component will mount
+    // console.log("Inside UseEffect"); //component will mount
     return () => {
-      console.log("Inside Return Function in UseEffect"); //unmounting, clearing intervals, timeouts, garbage
+      // console.log("Inside Return Function in UseEffect"); //unmounting, clearing intervals, timeouts, garbage
     };
   }, []); //dependency error is componentDidUpdate
 
-  console.log("Inside Render");
+  // console.log("Inside Render");
 
   const fetchData = async () => {
     const responseData = await fetch(
@@ -34,12 +36,12 @@ const Body = () => {
     const jsonResponse = await responseData.json();
 
     setResStateData(
-      jsonResponse.data.cards[1].card.card.gridElements.infoWithStyle
-        .restaurants
+      jsonResponse?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle
+        ?.restaurants
     );
     setFilterData(
-      jsonResponse.data.cards[1].card.card.gridElements.infoWithStyle
-        .restaurants
+      jsonResponse?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle
+        ?.restaurants
     );
   };
 
@@ -51,6 +53,7 @@ const Body = () => {
     );
   }
 
+  console.log("filterData", filterData);
   if (filterData.length <= 0) {
     return <Shimmer />;
   }
@@ -61,6 +64,7 @@ const Body = () => {
         <input
           type="text"
           name="search-input"
+          data-testid="searchInput"
           className="border-2 px-3 ml-3"
           value={searchText}
           onChange={(e) => {
@@ -88,6 +92,15 @@ const Body = () => {
         >
           Top Rated Restaurants
         </button>
+        <div>
+          <label>Username: </label>
+          <input
+            type="text"
+            value={loggedInUser}
+            onChange={(e) => setUsername(e.target.value)}
+            className="border border-black"
+          />
+        </div>
       </div>
       <div className="flex flex-wrap">
         {filterData.map((restaurant) => (
